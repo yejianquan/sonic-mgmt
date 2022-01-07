@@ -1,0 +1,46 @@
+{
+{% for k in cfg_t0 %}
+{%     if k == 'BGP_NEIGHBOR' %}
+    "BGP_NEIGHBOR": {
+{%         for neigh in cfg_t0['BGP_NEIGHBOR'] | sort %}
+{#     to detect number of pcs, used multiplier 2, because each neigh have ipv4 and ipv6 key #}
+{%             if cfg_t0['BGP_NEIGHBOR'] | length == 8  %}
+{%                 if cfg_t0['BGP_NEIGHBOR'][neigh]['name'] in ['ARISTA01T1', 'ARISTA02T1'] %}
+        "Vrf_test|{{ neigh }}": {{ cfg_t0['BGP_NEIGHBOR'][neigh] | to_nice_json | indent(width=8) }}
+{%-                else %}
+        "Vrf2|{{ neigh }}": {{ cfg_t0['BGP_NEIGHBOR'][neigh] | to_nice_json | indent(width=8) }}
+{%-                endif %}
+{%-            else %}
+{%                 if cfg_t0['BGP_NEIGHBOR'][neigh]['name'].find('T2') > -1 %}
+        "Vrf_test|{{ neigh }}": {{ cfg_t0['BGP_NEIGHBOR'][neigh] | to_nice_json | indent(width=8) }}
+{%-                else %}
+        "{{ neigh }}": {{ cfg_t0['BGP_NEIGHBOR'][neigh] | to_nice_json | indent(width=8) }}
+{%-                endif %}
+{%-            endif %}
+{%-            if not loop.last %},{%endif %}
+
+{%         endfor %}
+    },
+{%     elif k == 'LOOPBACK_INTERFACE' %}
+    "LOOPBACK_INTERFACE": {
+        "Loopback0": {"vrf_name": "Vrf_test"},
+        "Loopback0|10.1.0.32/32": {},
+        "Loopback0|FC00:1::32/128": {}
+    },
+{%     elif k == 'PORTCHANNEL_INTERFACE' %}
+    "PORTCHANNEL_INTERFACE": {
+{%        for pc in cfg_t0['PORTCHANNEL_INTERFACE'] | sort %}
+{#     each pc have 3 keys: pc, pc|ipv4 and pc|ipv6 #}
+        "{{ pc }}": {"vrf_name": "Vrf_test"}
+{%-            if not loop.last %},{% endif %}
+
+{%        endfor %}
+    },
+{%     else %}
+    "{{ k }}": {{ cfg_t0[k] | to_nice_json | indent}},
+{%     endif %}
+{% endfor %}
+    "VRF": {
+        "Vrf_test": {}
+    }
+}
