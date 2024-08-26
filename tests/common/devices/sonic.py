@@ -209,7 +209,7 @@ class SonicHost(AnsibleHostBase):
                 lambda: self._get_platform_asic(facts["platform"])
             ],
             timeout=120,
-            thread_count=5
+            thread_count=1
         )
 
         facts["num_asic"] = results[0]
