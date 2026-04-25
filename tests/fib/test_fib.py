@@ -640,6 +640,7 @@ def test_vxlan_hash(add_default_route_to_dut, duthost, duthosts,                
     else:
         src_ip_range = SRC_IPV6_RANGE
         dst_ip_range = DST_IPV6_RANGE
+    switch_type = duthosts[0].facts.get('switch_type')
     ptf_runner(ptfhost,
                "ptftests",
                "hash_test.VxlanHashTest",
@@ -654,6 +655,7 @@ def test_vxlan_hash(add_default_route_to_dut, duthost, duthosts,                
                        "vlan_ids": VLANIDS,
                        "ignore_ttl": ignore_ttl,
                        "single_fib_for_duts": single_fib_for_duts,
+                       "switch_type": switch_type,
                        "ipver": vxlan_ipver,
                        "topo_name": tbinfo['topo']['name']
                        },
@@ -694,6 +696,7 @@ def test_nvgre_hash(add_default_route_to_dut, duthost, duthosts,                
     else:
         src_ip_range = SRC_IPV6_RANGE
         dst_ip_range = DST_IPV6_RANGE
+    switch_type = duthosts[0].facts.get('switch_type')
     ptf_runner(ptfhost,
                "ptftests",
                "hash_test.NvgreHashTest",
@@ -707,6 +710,7 @@ def test_nvgre_hash(add_default_route_to_dut, duthost, duthosts,                
                        "vlan_ids": VLANIDS,
                        "ignore_ttl": ignore_ttl,
                        "single_fib_for_duts": single_fib_for_duts,
+                       "switch_type": switch_type,
                        "ipver": nvgre_ipver,
                        "topo_name": tbinfo['topo']['name']
                        },

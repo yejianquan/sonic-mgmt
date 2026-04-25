@@ -1093,6 +1093,10 @@ class VxlanHashTest(HashTest):
         masked_exp_pkt = Mask(exp_pkt)
         masked_exp_pkt.set_do_not_care_scapy(scapy.Ether, "src")
         masked_exp_pkt.set_do_not_care_scapy(scapy.Ether, "dst")
+        # Outer IPv6 hlim may be decremented multiple times on chassis (across ingress/egress LCs).
+        if self.ignore_ttl:
+            masked_exp_pkt.set_do_not_care_scapy(scapy.IPv6, "hlim")
+            masked_exp_pkt.set_do_not_care_scapy(scapy.TCP, "chksum")
 
         send_packet(self, src_port, vxlan_pkt)
         logging.info('Sent Ether(src={}, dst={})/IP(src={}, dst={})VxLAN(sport={}, dport={})'
@@ -1314,6 +1318,11 @@ class NvgreHashTest(HashTest):
         masked_exp_pkt = Mask(exp_pkt)
         masked_exp_pkt.set_do_not_care_scapy(scapy.Ether, "src")
         masked_exp_pkt.set_do_not_care_scapy(scapy.Ether, "dst")
+        # Outer TTL may be decremented multiple times on chassis (across ingress/egress LCs).
+        # Mask TTL and chksum when ignore_ttl is set.
+        if self.ignore_ttl:
+            masked_exp_pkt.set_do_not_care_scapy(scapy.IP, "ttl")
+            masked_exp_pkt.set_do_not_care_scapy(scapy.IP, "chksum")
 
         send_packet(self, src_port, nvgre_pkt)
         logging.info('Sent Outer Ether(src={}, dst={})/IP(src={}, dst={}, nvgre_tni={})'
