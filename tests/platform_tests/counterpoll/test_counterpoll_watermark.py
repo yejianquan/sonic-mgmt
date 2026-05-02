@@ -139,7 +139,15 @@ def test_counterpoll_queue_watermark_pg_drop(duthosts, localhost, enum_rand_one_
         if 'reload' in config_apply_method:
             config_reload(duthost)
         elif 'reboot' in config_apply_method:
-            reboot(duthost, localhost)
+            # Use safe_reboot=True so the helper waits for docker, database, and all
+            # critical services (e.g. swss@N, syncd@N) to come back up before we
+            # proceed. On multi-asic KVM, swss/syncd start-pre can hit the systemd
+            # 90s timeout repeatedly under cold-boot I/O contention and only
+            # recover after several minutes (see issue #24234). Without
+            # safe_reboot, the subsequent fixed sleep(60) is far too short and
+            # COUNTERS_DB never gets populated by orchagent within the wait_until
+            # window, causing flaky failures.
+            reboot(duthost, localhost, safe_reboot=True)
     # Sleep for 60 seconds to wait for config DB to be ready or else the next step will cause testcase failure
     time.sleep(60)
     # verify all counterpolls are disabled after reload or reboot
