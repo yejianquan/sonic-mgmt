@@ -55,6 +55,9 @@ def copy_acstests_directory(ptfhost):
 
     yield
 
+    if os.environ.get("KEEP_PTF_FILES"):
+        logger.info("KEEP_PTF_FILES set, leaving ACS test files on PTF host '{0}'".format(ptfhost.hostname))
+        return
     logger.info("Delete ACS test files from PTF host '{0}'".format(ptfhost.hostname))
     ptfhost.file(path=os.path.join(ROOT_DIR, ACS_TESTS), state="absent")
 
@@ -75,6 +78,9 @@ def copy_ptftests_directory(ptfhost):
 
     yield
 
+    if os.environ.get("KEEP_PTF_FILES"):
+        logger.info("KEEP_PTF_FILES set, leaving PTF test files on PTF host '{0}'".format(ptfhost.hostname))
+        return
     logger.info("Delete PTF test files from PTF host '{0}'".format(ptfhost.hostname))
     ptfhost.file(path=os.path.join(ROOT_DIR, PTF_TESTS), state="absent")
 
