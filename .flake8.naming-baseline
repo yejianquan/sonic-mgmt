@@ -1,0 +1,386 @@
+# pep8-naming baseline for sonic-mgmt
+#
+# Per-file ignore list for pep8-naming violations (N802/N803/N806/N815/N816)
+# that pre-date the activation of these checks in CI. The corresponding
+# pre-commit flake8 hook is configured to load this file via
+# --append-config=.flake8.naming-baseline.
+#
+# RULES OF ENGAGEMENT
+#   * Do NOT add entries to grandfather new code. The whole point of the
+#     baseline is to shrink over time as files are cleaned up.
+#   * When you fully clean a file, delete its line below.
+#   * When you partially clean a file, drop the codes it no longer
+#     violates (e.g. drop N802 if no camelCase functions remain).
+#   * Generated code (gRPC/protobuf stubs, generated *_pb2*.py) is excluded
+#     globally in the main .flake8; do not list it here.
+#
+# CODES IN SCOPE
+#   N802 — function name should be lowercase
+#   N803 — argument name should be lowercase
+#   N806 — variable in function should be lowercase
+#   N815 — mixedCase variable in class scope
+#   N816 — mixedCase variable in global scope
+#
+# Sorted alphabetically by path. Generated 2026-06-04.
+
+[flake8]
+per-file-ignores =
+    .azure-pipelines/impacted_area_testing/get_test_scripts.py: N802
+    ansible/TestbedProcessing.py: N802, N806, N816
+    ansible/devutil/ssh_session_repo.py: N803
+    ansible/dualtor/nic_simulator/nic_simulator.py: N802
+    ansible/library/announce_routes.py: N806
+    ansible/library/bgp_route.py: N806
+    ansible/library/config_facts.py: N802
+    ansible/library/conn_graph_facts.py: N806
+    ansible/library/counter_facts.py: N806
+    ansible/library/generate_golden_config_db.py: N806
+    ansible/library/lldp_facts.py: N802, N806
+    ansible/library/minigraph_facts.py: N802, N803, N806
+    ansible/library/show_interface.py: N806
+    ansible/library/show_ip_interface.py: N806
+    ansible/library/show_ipv6_interface.py: N806
+    ansible/library/snmp_facts.py: N802, N806
+    ansible/library/testbed_vm_info.py: N806
+    ansible/library/topo_facts.py: N806
+    ansible/linkstate/scripts/fanout_listener.py: N802, N803, N806, N815
+    ansible/linkstate/scripts/mlnx/fanout_listener.py: N802, N803, N806
+    ansible/linkstate/scripts/vm_state_changer.py: N802, N806
+    ansible/module_utils/graph_utils.py: N806
+    ansible/module_utils/multi_servers_utils.py: N803
+    ansible/module_utils/port_utils.py: N802, N803, N806
+    ansible/plugins/filter/filters.py: N803
+    ansible/recover_server.py: N806
+    ansible/roles/test/files/acstests/IP_decap_test.py: N802
+    ansible/roles/test/files/acstests/acl_port_range_traffic_test.py: N802
+    ansible/roles/test/files/acstests/acl_tcp_test.py: N802
+    ansible/roles/test/files/acstests/acltb_test.py: N802
+    ansible/roles/test/files/acstests/dscp_ecn_send.py: N802
+    ansible/roles/test/files/acstests/dscp_mapping.py: N802
+    ansible/roles/test/files/acstests/everflow_policer_test.py: N802
+    ansible/roles/test/files/acstests/everflow_tb_test.py: N802
+    ansible/roles/test/files/acstests/py3/lag_test.py: N802
+    ansible/roles/test/files/helpers/arp_responder.py: N806
+    ansible/roles/test/files/helpers/ferret.py: N802
+    ansible/roles/test/files/ptftests/device_connection.py: N802, N806
+    ansible/roles/test/files/ptftests/fib_test.py: N802
+    ansible/roles/test/files/ptftests/host_device.py: N802
+    ansible/roles/test/files/ptftests/py3/IP_decap_test.py: N802
+    ansible/roles/test/files/ptftests/py3/advanced-reboot.py: N802, N806
+    ansible/roles/test/files/ptftests/py3/arptest.py: N802
+    ansible/roles/test/files/ptftests/py3/bfd_responder.py: N802
+    ansible/roles/test/files/ptftests/py3/copp_tests.py: N802
+    ansible/roles/test/files/ptftests/py3/device_connection.py: N802, N806
+    ansible/roles/test/files/ptftests/py3/dhcp_relay_stress_test.py: N802
+    ansible/roles/test/files/ptftests/py3/dhcp_relay_test.py: N802
+    ansible/roles/test/files/ptftests/py3/dhcpv6_counter_test.py: N802
+    ansible/roles/test/files/ptftests/py3/dhcpv6_relay_test.py: N802
+    ansible/roles/test/files/ptftests/py3/dir_bcast_test.py: N802
+    ansible/roles/test/files/ptftests/py3/fdb_flush_test.py: N802
+    ansible/roles/test/files/ptftests/py3/fdb_mac_expire_test.py: N802
+    ansible/roles/test/files/ptftests/py3/fdb_mac_learning_test.py: N802
+    ansible/roles/test/files/ptftests/py3/fdb_test.py: N802
+    ansible/roles/test/files/ptftests/py3/fg_ecmp_test.py: N802
+    ansible/roles/test/files/ptftests/py3/fib_test.py: N802
+    ansible/roles/test/files/ptftests/py3/generic_hash_test.py: N802
+    ansible/roles/test/files/ptftests/py3/hash_test.py: N802
+    ansible/roles/test/files/ptftests/py3/host_device.py: N802
+    ansible/roles/test/files/ptftests/py3/inner_hash_test.py: N802, N803, N806
+    ansible/roles/test/files/ptftests/py3/ip_in_ip_tunnel_test.py: N802
+    ansible/roles/test/files/ptftests/py3/mtu_test.py: N802
+    ansible/roles/test/files/ptftests/py3/pfc_pause_test.py: N802
+    ansible/roles/test/files/ptftests/py3/pfc_wd.py: N802
+    ansible/roles/test/files/ptftests/py3/pfc_wd_background_traffic.py: N802
+    ansible/roles/test/files/ptftests/py3/pfcwd_background_traffic.py: N802
+    ansible/roles/test/files/ptftests/py3/populate_fdb.py: N802, N806
+    ansible/roles/test/files/ptftests/py3/pvst_bpdu_test.py: N802
+    ansible/roles/test/files/ptftests/py3/radv_ipv6_ra_test.py: N802
+    ansible/roles/test/files/ptftests/py3/router_adv_mflag_test.py: N802
+    ansible/roles/test/files/ptftests/py3/sflow_test.py: N802, N806
+    ansible/roles/test/files/ptftests/py3/sonic.py: N806
+    ansible/roles/test/files/ptftests/py3/vlan_test.py: N802
+    ansible/roles/test/files/ptftests/py3/vnet_bgp_scale_dataplane.py: N802
+    ansible/roles/test/files/ptftests/py3/vnet_vxlan.py: N802
+    ansible/roles/test/files/ptftests/py3/voq.py: N802
+    ansible/roles/test/files/ptftests/py3/vrf_test.py: N802
+    ansible/roles/test/files/ptftests/py3/vxlan-decap.py: N802, N806
+    ansible/roles/test/files/ptftests/py3/vxlan_ecmp_ptftest.py: N802
+    ansible/roles/test/files/ptftests/py3/vxlan_traffic.py: N802
+    ansible/roles/test/files/ptftests/py3/vxlan_traffic_scale.py: N802
+    ansible/roles/test/files/ptftests/py3/wr_arp.py: N802
+    ansible/roles/test/files/ptftests/radv_ipv6_ra_test.py: N802
+    ansible/roles/test/files/ptftests/router_adv_mflag_test.py: N802
+    ansible/roles/test/files/ptftests/sonic.py: N806
+    ansible/roles/vm_set/files/mux_simulator.py: N806
+    ansible/roles/vm_set/files/vm_resumer.py: N806
+    ansible/roles/vm_set/library/vm_topology.py: N802, N806
+    ansible/ssh_session_gen.py: N806
+    test_reporting/report_data_storage.py: N806
+    test_reporting/sai_swss_invocations.py: N806
+    tests/acl/custom_acl_table/test_custom_acl_table.py: N806
+    tests/acl/test_acl.py: N806
+    tests/acl/test_acl_outer_vlan.py: N806
+    tests/acl/test_src_mac_rewrite.py: N802, N806
+    tests/acl/test_stress_acl.py: N806
+    tests/arp/arp_utils.py: N802, N803, N806
+    tests/arp/conftest.py: N806
+    tests/arp/files/ferret.py: N802
+    tests/arp/test_neighbor_mac.py: N802, N803, N806
+    tests/arp/test_neighbor_mac_aging.py: N802
+    tests/arp/test_neighbor_mac_noptf.py: N802, N803, N806
+    tests/arp/test_stress_arp.py: N806
+    tests/arp/test_unknown_mac.py: N802, N803
+    tests/arp/test_wr_arp.py: N802, N806
+    tests/bgp/bgp_helpers.py: N806
+    tests/bgp/conftest.py: N806
+    tests/bgp/route_checker.py: N806
+    tests/bgp/test_4-byte_asn_community.py: N806
+    tests/bgp/test_bgp_aggregate_address_scale_stress.py: N806
+    tests/bgp/test_bgp_dual_asn.py: N806
+    tests/bgp/test_bgp_route_neigh_learning.py: N802
+    tests/bgp/test_bgp_session_flap.py: N816
+    tests/bgp/test_bgp_suppress_fib.py: N806
+    tests/bgp/test_bgp_update_replication.py: N806
+    tests/bgp/test_ipv6_bgp_scale.py: N803, N806
+    tests/bgp/test_traffic_shift.py: N802
+    tests/bgp/test_traffic_shift_sup.py: N802
+    tests/cacl/test_cacl_application.py: N806
+    tests/common/arp_utils.py: N802, N803, N806
+    tests/common/configlet/utils.py: N802
+    tests/common/connections/console_host.py: N802
+    tests/common/devices/eos.py: N806
+    tests/common/devices/sonic_asic.py: N803
+    tests/common/dhcp_relay_utils.py: N806
+    tests/common/dualtor/data_plane_utils.py: N803, N806
+    tests/common/dualtor/dual_tor_utils.py: N806
+    tests/common/dualtor/tunnel_traffic_utils.py: N806
+    tests/common/fixtures/advanced_reboot.py: N802, N803, N806
+    tests/common/fixtures/consistency_checker/query-asic/query-asic.py: N806
+    tests/common/fixtures/duthost_utils.py: N803, N806
+    tests/common/fixtures/populate_fdb.py: N802, N806
+    tests/common/fixtures/ptfhost_utils.py: N806
+    tests/common/gu_utils.py: N806
+    tests/common/helpers/counterpoll_helper.py: N806
+    tests/common/helpers/drop_counters/drop_counters.py: N806
+    tests/common/helpers/dut_utils.py: N806
+    tests/common/helpers/pfc_gen_brcm_xgs.py: N802, N803, N806
+    tests/common/helpers/pfc_storm.py: N806
+    tests/common/helpers/platform_api/scripts/platform_api_server.py: N802
+    tests/common/helpers/port_utils.py: N806
+    tests/common/helpers/ptf_tests_helper.py: N806
+    tests/common/helpers/srv6_helper.py: N815
+    tests/common/helpers/tacacs/tacacs_helper.py: N806
+    tests/common/helpers/upgrade_helpers.py: N806
+    tests/common/ixia/ixia_fixtures.py: N806
+    tests/common/ixia/ixia_helpers.py: N806
+    tests/common/macsec/macsec_config_helper.py: N806
+    tests/common/multi_servers_utils.py: N803
+    tests/common/platform/controlplane_gating.py: N806
+    tests/common/platform/warmboot_sad_cases.py: N806
+    tests/common/plugins/conditional_mark/__init__.py: N806
+    tests/common/plugins/loganalyzer/__init__.py: N806
+    tests/common/plugins/memory_utilization/memory_utilization.py: N806
+    tests/common/plugins/pdu_controller/snmp_pdu_controllers.py: N802, N806
+    tests/common/plugins/pdu_controller/snmp_pdu_controllers_legacy.py: N802, N803, N806
+    tests/common/plugins/sanity_check/checks.py: N806
+    tests/common/snappi_tests/common_helpers.py: N802
+    tests/common/snappi_tests/ixload/snappi_helper.py: N802, N806
+    tests/common/snappi_tests/read_pcap.py: N803, N806
+    tests/common/snappi_tests/snappi_fixtures.py: N806
+    tests/common/snappi_tests/traffic_generation.py: N806
+    tests/common/snappi_tests/uhd/uhd_helpers.py: N802, N806
+    tests/common/snappi_tests/variables.py: N816
+    tests/common/snapshot_comparison/warm_vs_cold.py: N806
+    tests/common/utilities.py: N802, N806
+    tests/configlet/util/generic_patch.py: N806
+    tests/configlet/util/strip.py: N802
+    tests/conftest.py: N802, N806
+    tests/copp/test_copp.py: N803, N806
+    tests/crm/test_crm.py: N806
+    tests/dash/conftest.py: N806
+    tests/decap/test_decap.py: N806
+    tests/decap/test_subnet_decap.py: N802, N806
+    tests/dhcp_relay/test_dhcp_counter_stress.py: N806
+    tests/dhcp_relay/test_dhcp_pkt_fwd.py: N802, N803, N806
+    tests/dhcp_relay/test_dhcp_pkt_recv.py: N806
+    tests/dhcp_relay/test_dhcp_relay.py: N806
+    tests/dhcp_relay/test_dhcpv4_relay.py: N806
+    tests/dhcp_relay/test_dhcpv6_relay.py: N806
+    tests/disk/test_disk_exhaustion.py: N806
+    tests/drop_packets/drop_packets.py: N806
+    tests/drop_packets/test_configurable_drop_counters.py: N802, N806
+    tests/drop_packets/test_drop_counters.py: N806
+    tests/dualtor/test_orchagent_standby_tor_downstream.py: N806
+    tests/dualtor/test_standby_tor_upstream_mux_toggle.py: N806
+    tests/dualtor/test_tor_ecn.py: N806
+    tests/dualtor_io/conftest.py: N806
+    tests/dut_console/test_console_baud_rate.py: N806
+    tests/ecmp/test_ecmp_balance.py: N806
+    tests/ecmp/test_fgnhg.py: N806
+    tests/everflow/everflow_test_utilities.py: N803, N806
+    tests/everflow/test_everflow_testbed.py: N806
+    tests/fdb/test_fdb.py: N806
+    tests/fdb/test_fdb_flush.py: N802, N803, N806
+    tests/fdb/test_fdb_mac_expire.py: N802, N803, N806
+    tests/fdb/test_fdb_mac_learning.py: N802, N803, N806
+    tests/fdb/utils.py: N802, N803, N806
+    tests/filterleaf/filterleaf_helpers.py: N806
+    tests/generic_config_updater/add_cluster/test_port_speed_change.py: N806
+    tests/generic_config_updater/conftest.py: N806
+    tests/generic_config_updater/test_bgp_prefix.py: N806
+    tests/generic_config_updater/test_dynamic_acl.py: N806
+    tests/generic_config_updater/test_packet_trimming_config_asymmetric.py: N806
+    tests/generic_config_updater/test_packet_trimming_config_symmetric.py: N806
+    tests/generic_config_updater/test_syslog.py: N806
+    tests/gnmi/crl/crl_server.py: N802
+    tests/gnmi/test_gnmi.py: N806
+    tests/ha/conftest.py: N802, N806
+    tests/high_frequency_telemetry/conftest.py: N806
+    tests/iface_namingmode/test_iface_namingmode.py: N802, N806
+    tests/ip/test_mgmt_ipv6_only.py: N806
+    tests/ipfwd/conftest.py: N806
+    tests/ipfwd/test_nhop_group.py: N806
+    tests/ixia/ecn/conftest.py: N802, N806
+    tests/ixia/files/helper.py: N806
+    tests/k8s/conftest.py: N806
+    tests/l2/test_l2_configure.py: N806
+    tests/lldp/test_lldp_syncd.py: N806
+    tests/log_fidelity/test_bgp_shutdown.py: N806
+    tests/macsec/test_dataplane.py: N806
+    tests/macsec/test_interop_protocol.py: N806
+    tests/mvrf/temp_http_server.py: N802
+    tests/mvrf/test_mgmtvrf.py: N806
+    tests/nat/nat_helpers.py: N806
+    tests/ospf/conftest.py: N802
+    tests/ospf/test_ospf_bfd.py: N803
+    tests/passw_hardening/passw_hardening_utils.py: N806
+    tests/passw_hardening/test_passw_hardening.py: N806
+    tests/pc/test_lag_2.py: N806
+    tests/pc/test_po_cleanup.py: N806
+    tests/pc/test_po_update.py: N806
+    tests/pc/test_retry_count.py: N806
+    tests/pfc_asym/test_pfc_asym.py: N803
+    tests/pfcwd/conftest.py: N806
+    tests/pfcwd/test_pfcwd_all_port_storm.py: N806
+    tests/pfcwd/test_pfcwd_cli.py: N806
+    tests/pfcwd/test_pfcwd_function.py: N802, N806
+    tests/pfcwd/test_pfcwd_timer_accuracy.py: N806
+    tests/pfcwd/test_pfcwd_warm_reboot.py: N806
+    tests/platform_tests/api/test_chassis.py: N806
+    tests/platform_tests/api/test_chassis_fans.py: N806
+    tests/platform_tests/api/test_fan_drawer.py: N806
+    tests/platform_tests/api/test_fan_drawer_fans.py: N806
+    tests/platform_tests/api/test_module.py: N806
+    tests/platform_tests/api/test_psu.py: N806
+    tests/platform_tests/api/test_psu_fans.py: N806
+    tests/platform_tests/api/test_sfp.py: N806
+    tests/platform_tests/conftest.py: N806
+    tests/platform_tests/link_flap/link_flap_utils.py: N806
+    tests/platform_tests/mellanox/test_psu_power_threshold.py: N806
+    tests/platform_tests/test_advanced_reboot.py: N806
+    tests/platform_tests/test_auto_negotiation.py: N806
+    tests/platform_tests/test_cpu_memory_usage.py: N803
+    tests/platform_tests/test_first_time_boot_password_change/conftest.py: N816
+    tests/platform_tests/test_platform_info.py: N806
+    tests/platform_tests/test_process_reboot_cause.py: N806
+    tests/platform_tests/test_service_warm_restart.py: N806
+    tests/portstat/test_portstat.py: N806
+    tests/qos/conftest.py: N802, N803
+    tests/qos/files/brcm/qos_param_generator.py: N803
+    tests/qos/files/cisco/qos_param_generator.py: N803
+    tests/qos/files/mellanox/qos_param_generator.py: N803, N806
+    tests/qos/qos_helpers.py: N802, N806
+    tests/qos/qos_sai_base.py: N802, N803, N806
+    tests/qos/test_buffer.py: N802, N806
+    tests/qos/test_oq_watchdog.py: N802, N803, N806
+    tests/qos/test_qos_masic.py: N802, N803, N806
+    tests/qos/test_qos_probe.py: N802, N803, N806
+    tests/qos/test_qos_sai.py: N802, N803, N806
+    tests/qos/test_tunnel_qos_remap.py: N806
+    tests/qos/test_voq_watchdog.py: N802, N803, N806
+    tests/qos/tunnel_qos_remap_base.py: N806
+    tests/read_mac/test_read_mac_metadata.py: N806
+    tests/restapi/conftest.py: N806
+    tests/route/test_duplicate_route.py: N806
+    tests/route/test_forced_mgmt_route.py: N806
+    tests/route/test_route_bgp_ecmp.py: N806
+    tests/route/test_route_flap.py: N806
+    tests/route/test_route_perf.py: N806
+    tests/route/test_static_route.py: N806
+    tests/sai_qualify/conftest.py: N806
+    tests/sai_qualify/sai_infra.py: N806
+    tests/saitests/copp_tests.py: N802
+    tests/saitests/ecmp_test.py: N802
+    tests/saitests/mock/ut/test_pfc_xoff_probing.py: N802
+    tests/saitests/mock/ut/test_probing_base.py: N802
+    tests/saitests/mock/ut/test_stream_manager.py: N806
+    tests/saitests/pfc_asym.py: N802
+    tests/saitests/probe/probing_base.py: N802
+    tests/saitests/probe/threshold_range_probing_algorithm.py: N806
+    tests/saitests/py3/sai_base_test.py: N806
+    tests/saitests/py3/sai_qos_tests.py: N802, N803, N806
+    tests/saitests/sai_rpc_caller.py: N802
+    tests/sflow/test_sflow.py: N802
+    tests/show_techsupport/conftest.py: N806
+    tests/smartswitch/platform_tests/test_platform_dpu.py: N806
+    tests/snappi_tests/bgp/files/bgp_convergence_helper.py: N802, N806
+    tests/snappi_tests/bgp/files/bgp_outbound_helper.py: N802, N806
+    tests/snappi_tests/bgp/files/bgp_test_gap_helper.py: N802
+    tests/snappi_tests/bgp/test_bgp_rib_in_capacity.py: N802
+    tests/snappi_tests/bgp/test_bgp_rib_route_optimztn_perf.py: N803
+    tests/snappi_tests/dash/ha/ha_helper.py: N802, N806
+    tests/snappi_tests/dataplane/files/helper.py: N806
+    tests/snappi_tests/dataplane/test_latency.py: N806
+    tests/snappi_tests/ecn/files/bpfabric_helper.py: N806
+    tests/snappi_tests/ecn/files/helper.py: N806
+    tests/snappi_tests/ecn/files/restpy_multidut_helper.py: N806
+    tests/snappi_tests/files/helper.py: N806
+    tests/snappi_tests/lacp/files/lacp_dut_helper.py: N802
+    tests/snappi_tests/lacp/files/lacp_physical_helper.py: N802
+    tests/snappi_tests/layer1/test_fec_error_insertion.py: N806
+    tests/snappi_tests/pfc/files/mixed_speed_multidut_helper.py: N806
+    tests/snappi_tests/pfc/files/pfc_congestion_helper.py: N806
+    tests/snappi_tests/pfcwd/files/pfcwd_actions_helper.py: N806
+    tests/snappi_tests/pfcwd/files/pfcwd_basic_helper.py: N806
+    tests/snappi_tests/pfcwd/files/pfcwd_multi_node_helper.py: N806
+    tests/snappi_tests/qos/files/packet_reorder_helper.py: N806
+    tests/snappi_tests/reboot/files/reboot_helper.py: N802
+    tests/snmp/test_snmp_memory.py: N802, N806
+    tests/snmp/test_snmp_phy_entity.py: N806
+    tests/srv6/srv6_utils.py: N802
+    tests/srv6/test_srv6_dataplane.py: N802, N803
+    tests/srv6/test_srv6_static_config.py: N802
+    tests/srv6/test_srv6_vlan_forwarding.py: N802, N803
+    tests/ssh/test_ssh_stress.py: N802
+    tests/stress/test_stress_routes.py: N806
+    tests/syslog/test_syslog.py: N806
+    tests/syslog/test_syslog_source_ip.py: N806
+    tests/system_health/test_watchdog.py: N806
+    tests/tacacs/test_authorization.py: N806
+    tests/telemetry/events/swss_events.py: N806
+    tests/telemetry/show_cli_to_gnmi_path.py: N802
+    tests/telemetry/telemetry_utils.py: N806
+    tests/telemetry/test_telemetry_srv6.py: N806
+    tests/telemetry/validate_yang_events.py: N802, N803, N806
+    tests/test_nbr_health.py: N806
+    tests/test_pktgen.py: N816
+    tests/test_posttest.py: N806
+    tests/test_pretest.py: N806
+    tests/voq/test_fabric_cli_and_db.py: N806
+    tests/voq/test_fabric_reach.py: N802, N803, N806, N816
+    tests/voq/test_voq_chassis_app_db_consistency.py: N806
+    tests/voq/test_voq_disrupts.py: N806
+    tests/voq/test_voq_fabric_capacity.py: N806
+    tests/voq/test_voq_fabric_isolation.py: N803, N806
+    tests/voq/test_voq_fabric_status_all.py: N802, N803, N806
+    tests/voq/test_voq_ipfwd.py: N806
+    tests/voq/test_voq_nbr.py: N806
+    tests/vrf/test_vrf.py: N806
+    tests/vxlan/test_vnet_bgp_route_precedence.py: N802, N803, N806
+    tests/vxlan/test_vnet_vxlan.py: N806
+    tests/vxlan/test_vxlan_bfd_tsa.py: N802
+    tests/vxlan/test_vxlan_crm.py: N806
+    tests/vxlan/test_vxlan_ecmp.py: N802
+    tests/vxlan/test_vxlan_ecmp_switchover.py: N802
+    tests/vxlan/test_vxlan_route_advertisement.py: N802, N806
+    tests/wan/lacp/test_wan_lag_min_link.py: N802

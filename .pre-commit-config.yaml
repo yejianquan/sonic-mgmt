@@ -15,7 +15,12 @@ repos:
     rev: 6.0.0
     hooks:
     -   id: flake8
-        args: ["--max-line-length=120"]
+        args:
+        -   --max-line-length=120
+        -   --extend-select=N802,N803,N806,N815,N816
+        -   --append-config=.flake8.naming-baseline
+        additional_dependencies:
+        -   pep8-naming==0.13.3
         exclude: ^spytest/|^tests/common2/
     -   id: flake8
         files: ^spytest/.*
