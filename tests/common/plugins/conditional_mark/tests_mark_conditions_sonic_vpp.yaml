@@ -505,6 +505,20 @@ mpls/test_mpls.py:
       - "asic_type in ['vpp']"
 
 #######################################
+#####           NAT               #####
+#######################################
+nat:
+  skip:
+    reason: >
+            NAT is not supported on the sonic-vpp data plane (no SAI NAT
+            object implementation in platform/vpp). Tracked in parity with
+            the main conditions file which already skips NAT on
+            mellanox/nvidia for the same hardware-support reason.
+    conditions_logical_operator: or
+    conditions:
+      - "asic_type in ['vpp']"
+
+#######################################
 #####           NTP               #####
 #######################################
 ntp/test_ntp.py::test_ntp:
