@@ -49,23 +49,69 @@ ROUTE_PATTERN_PREFIX = "ASIC_STATE:SAI_OBJECT_TYPE_ROUTE_ENTRY:"
 sonic_db_cli = "sonic-db-cli"
 
 
-@pytest.fixture(scope="module", autouse=True)
-def skip_if_srv6_not_supported(duthost):
-    ret = False
+# CRM repopulates its counters once per polling interval (300 seconds by default)
+# and reports them as not ready until the first poll completes, which also happens
+# after every config reload. Allow a little more than one interval for them to
+# appear before concluding anything about SRv6 support.
+CRM_COUNTERS_READY_TIMEOUT = 330
+
+
+def _read_srv6_crm_resource(duthost):
+    """Read the SRv6 MY_SID CRM resource.
+
+    Returns:
+        tuple(bool, bool): (counters_ready, srv6_supported)
+
+        ``counters_ready`` is False while CRM has not published the resource yet.
+        That is a transient state, not an answer about SRv6 support, so it must
+        be distinguished from a resource that is present with zero entries
+        available.
+    """
     result = duthost.shell("crm show resources srv6-my-sid-entry", module_ignore_errors=True)
     # The output of the above command looks like this if SRv6 is supported:
     # Resource Name        Used Count    Available Count
     # -----------------  ------------  -----------------
     # srv6_my_sid_entry             0                128
-    if result["rc"] == 0:
-        for line in result["stdout"].splitlines():
-            fields = line.split()
-            if len(fields) >= 3 and fields[0] == "srv6_my_sid_entry":
-                try:
-                    ret = int(fields[2]) > 0
-                except ValueError as e:
-                    logger.error(f"Failed to parse SRv6 resource count: {e}")
-                break
+    # Before the first CRM poll it instead reads:
+    # CRM counters are not ready. They would be populated after the polling interval.
+    if result["rc"] != 0:
+        return False, False
+    for line in result["stdout"].splitlines():
+        fields = line.split()
+        if len(fields) >= 3 and fields[0] == "srv6_my_sid_entry":
+            try:
+                return True, int(fields[2]) > 0
+            except ValueError as e:
+                logger.error(f"Failed to parse SRv6 resource count: {e}")
+                return True, False
+    return False, False
+
+
+@pytest.fixture(scope="module", autouse=True)
+def skip_if_srv6_not_supported(duthost):
+    ready, ret = _read_srv6_crm_resource(duthost)
+
+    if not ready:
+        # Treating "counters not ready" as "SRv6 unsupported" makes this module
+        # skip at random on DUTs that do support SRv6, so wait for the counters
+        # to be published instead. This costs nothing when the resource is
+        # already present, including when it is present with zero entries.
+        logger.info("CRM counters are not ready yet, waiting up to %s seconds for them "
+                    "to be published before deciding on SRv6 support",
+                    CRM_COUNTERS_READY_TIMEOUT)
+        state = {}
+
+        def _counters_ready():
+            state["ready"], state["supported"] = _read_srv6_crm_resource(duthost)
+            return state["ready"]
+
+        if wait_until(CRM_COUNTERS_READY_TIMEOUT, 15, 0, _counters_ready):
+            ret = state["supported"]
+        else:
+            logger.warning("CRM counters were still not ready after %s seconds; "
+                           "cannot determine SRv6 support", CRM_COUNTERS_READY_TIMEOUT)
+            ret = False
+
     logger.info(f"SRv6 is {'supported' if ret else 'NOT supported'} on this DUT.")
     if not ret:
         pytest.skip("SRv6 is not supported on this DUT")
