@@ -543,6 +543,24 @@ snmp/test_snmp_psu.py:
       - "asic_type in ['vpp'] and platform in ['x86_64-kvm_x86_64-r0']"
 
 #######################################
+#####           SRv6              #####
+#######################################
+srv6/test_srv6_qos.py::test_srv6_dscp_to_queue_mapping:
+  skip:
+    reason: >
+            Requires per-queue egress counters and DSCP-to-TC-to-queue classification.
+            saivpp implements neither - SAI_QUEUE_STAT_* is not implemented, so every
+            queue counter reads 0 while port counters work normally, and there are no
+            QoS map objects to steer traffic into queues. Verified on vlab-vpp-01: the
+            SRv6 traffic is forwarded correctly and the srv6stat SID counters do
+            increment, but all DSCP-to-queue assertions fail with
+            "queue N count 0 < expected 10". Consistent with the blanket 'qos' skip
+            already in this file.
+    conditions_logical_operator: or
+    conditions:
+      - "asic_type in ['vpp']"
+
+#######################################
 #####          Stress             #####
 #######################################
 stress/test_stress_routes.py::test_announce_withdraw_route:
