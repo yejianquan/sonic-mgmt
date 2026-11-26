@@ -1,6 +1,9 @@
-import pytest
-import time
+import json
+import re
 import shlex
+import time
+
+import pytest
 from tests.common.helpers.assertions import pytest_assert
 from tests.common.utilities import check_output
 from tests.common.helpers.tacacs.tacacs_helper import ssh_remote_run, ssh_remote_run_retry, check_tacacs  # noqa: F401
@@ -174,6 +177,56 @@ def test_ro_user_allowed_command(localhost, duthosts, enum_rand_one_per_hwsku_ho
                                                   'sudo sonic_installer list')
         pytest_assert(underscore_allowed, "command 'sudo sonic_installer list' should be allowed if"
                                           " 'sudo sonic-installer list' is banned")
+
+
+@pytest.mark.device_type('physical')  # In addition to the module's VS marker.
+def test_ro_show_version_missing_chassis_info(
+        localhost, duthosts, enum_rand_one_per_hwsku_hostname, tacacs_creds, check_tacacs):  # noqa: F811
+    """A read-only user can read the version with or without the chassis identity fields."""
+    duthost = duthosts[enum_rand_one_per_hwsku_hostname]
+    key = "CHASSIS_INFO|chassis 1"
+    labels = {"serial": "Serial Number", "model": "Model Number", "revision": "Hardware Revision"}
+
+    def chassis_info():
+        result = duthost.command(argv=["sonic-db-dump", "-n", "STATE_DB", "-k", key, "-y"])
+        dump = json.loads(result["stdout"])
+        return dump[key]["value"] if key in dump else {}
+
+    def show_version(phase):
+        result = ssh_remote_run(localhost, duthost.mgmt_ip, tacacs_creds["tacacs_ro_user"],
+                                tacacs_creds["tacacs_ro_user_passwd"], "show version", timeout=60)
+        output = result["stdout"] + "\n" + result["stderr"]
+        pytest_assert(result["rc"] == 0, "{}: show version rc={}: {}".format(phase, result["rc"], output))
+        denied = re.search(r"\[sudo\]|sudo:[^\n]*(?:password|tty|terminal|askpass)|permission denied|"
+                           r"make sure your account has rw permission", output, re.IGNORECASE)
+        pytest_assert(not denied, "{}: show version requested elevated access: {}".format(phase, output))
+        lines = result["stdout"].splitlines()
+        pytest_assert("SONiC Software Version: SONiC.{}".format(duthost.os_version) in lines,
+                      "{}: running software version missing from output: {}".format(phase, output))
+        return lines
+
+    original = chassis_info()
+    for field in labels:
+        pytest_assert(original.get(field), "Missing {} in {} before test".format(field, key))
+    normal = show_version("Populated STATE_DB")
+    for field, label in labels.items():
+        pytest_assert("{}: {}".format(label, original[field]) in normal,
+                      "show version does not match the {} field in STATE_DB".format(field))
+
+    # Leave psu_num and other unrelated fields intact, as on a partially populated chassis.
+    saved = {f: original[f] for f in (*labels, "switch_host_serial") if f in original}
+    cli = ["sonic-db-cli", "STATE_DB"]
+    try:
+        for fields in ({"revision"}, saved.keys()):
+            duthost.command(argv=cli + ["HDEL", key, *fields])
+            pytest_assert(fields.isdisjoint(chassis_info()), "Failed to remove {}".format(sorted(fields)))
+            show_version("Missing {}".format(", ".join(sorted(fields))))
+            pytest_assert(fields.isdisjoint(chassis_info()), "Chassis identity was repopulated during the test")
+    finally:
+        # Preserve any values freshly published by PMON instead of overwriting them.
+        for field, value in saved.items():
+            duthost.command(argv=cli + ["HSETNX", key, field, value])
+        pytest_assert(saved.keys() <= chassis_info().keys(), "Failed to restore chassis identity fields")
 
 
 def test_ro_user_dmesg_command(localhost, duthosts, enum_rand_one_per_hwsku_hostname, tacacs_creds,

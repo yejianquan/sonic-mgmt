@@ -357,12 +357,13 @@ def start_tacacs_server(ptfhost):
     return wait_until(5, 1, 0, tacacs_running, ptfhost)
 
 
-def ssh_remote_run(localhost, remote_ip, username, password, cmd):
-    cmd_quoted = shlex.quote(cmd)
-    res = localhost.shell("sshpass -p {} ssh "
-                          "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
-                          "{}@{} {}".format(password, username, remote_ip, cmd_quoted), module_ignore_errors=True)
-    return res
+def ssh_remote_run(localhost, remote_ip, username, password, cmd, timeout=None):
+    ssh_cmd = ("sshpass -p {} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
+               "{}@{} {}".format(shlex.quote(password), username, remote_ip, shlex.quote(cmd)))
+    if timeout is not None:
+        # Bound the client, not the remote command that TACACS authorizes.
+        ssh_cmd = "timeout -k 5s {:d}s {}".format(timeout, ssh_cmd)
+    return localhost.shell(ssh_cmd, module_ignore_errors=True)
 
 
 def ssh_remote_run_retry(localhost, dutip, ptfhost, user, password, command, retry_count=6):
